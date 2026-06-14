@@ -54,6 +54,35 @@
   .testimonial p { font-size: 14px; margin-top: 5px; }
   .footer { background: #2e7d32; color: #fff; text-align: center; padding: 20px 15px; font-size: 12px; }
   .urgent { background: #ffebee; color: #c62828; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; }
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .photo-grid img { width: 100%; border-radius: 8px; border: 1px solid #eee; aspect-ratio: 1/1; object-fit: cover; }
+
+  /* Social proof notification */
+  .sp-notif {
+    position: fixed; bottom: 20px; left: 15px; z-index: 9999;
+    background: #fff; border-radius: 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.18);
+    padding: 12px 14px 12px 12px; display: flex; align-items: center; gap: 10px;
+    max-width: 320px; width: calc(100% - 30px);
+    transform: translateY(150%); opacity: 0;
+    transition: transform .5s cubic-bezier(.2,.9,.3,1.2), opacity .4s;
+    border-left: 4px solid #2e7d32;
+  }
+  .sp-notif.show { transform: translateY(0); opacity: 1; }
+  .sp-notif .sp-img {
+    width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+    background: #eee;
+  }
+  .sp-notif .sp-text { flex: 1; font-size: 13px; line-height: 1.35; color: #333; }
+  .sp-notif .sp-text b { color: #2e7d32; }
+  .sp-notif .sp-time { font-size: 11px; color: #999; margin-top: 2px; }
+  .sp-notif .sp-close {
+    position: absolute; top: 6px; right: 8px; background: none; border: none;
+    font-size: 16px; color: #999; cursor: pointer; line-height: 1;
+  }
+  .sp-badge {
+    display: inline-block; background: #4caf50; color: #fff; font-size: 10px;
+    padding: 1px 6px; border-radius: 8px; margin-left: 4px; vertical-align: middle;
+  }
 </style>
 </head>
 <body>
@@ -69,9 +98,22 @@
   <div class="title-banner">MESIN PEMOTONG RUMPUT 2026</div>
 
   <div class="gallery">
-    <img src="https://cdn.orderonline.id/uploads/images_9421031705307276011.jpg" alt="Produk 2">
-    <img src="https://cdn.orderonline.id/uploads/images_3204311705307533140.png" alt="Produk 3">
-    <img src="https://cdn.orderonline.id/uploads/images_7689031689235551645.gif" alt="Produk Demo">
+    <img src="https://cdn.orderonline.id/uploads/images_9421031705307276011.jpg" alt="Foto Produk 1">
+    <img src="https://cdn.orderonline.id/uploads/images_3204311705307533140.png" alt="Foto Produk 2">
+    <img src="https://cdn.orderonline.id/uploads/images_7133571706153732468.png" alt="Foto Produk 3">
+    <img src="https://cdn.orderonline.id/uploads/images_2307461705307602536.png" alt="Foto Produk 4">
+    <img src="https://cdn.orderonline.id/uploads/images_2980641707109192194.png" alt="Foto Produk 5">
+    <img src="https://cdn.orderonline.id/uploads/images_7689031689235551645.gif" alt="Demo Produk">
+  </div>
+
+  <div class="section">
+    <h2>📸 Galeri Produk</h2>
+    <div class="photo-grid">
+      <img src="https://cdn.orderonline.id/uploads/images_9421031705307276011.jpg" alt="Produk">
+      <img src="https://cdn.orderonline.id/uploads/images_3204311705307533140.png" alt="Produk">
+      <img src="https://cdn.orderonline.id/uploads/images_7133571706153732468.png" alt="Produk">
+      <img src="https://cdn.orderonline.id/uploads/images_7689031689235551645.gif" alt="Demo">
+    </div>
   </div>
 
   <div class="promo-banner">
@@ -205,7 +247,53 @@
 
 </div>
 
+<!-- Social Proof Notification -->
+<div class="sp-notif" id="spNotif">
+  <img class="sp-img" id="spImg" src="https://cdn.orderonline.id/uploads/images_9421031705307276011.jpg" alt="">
+  <div class="sp-text">
+    <span id="spMsg"><b>Budi</b> dari <b>Jakarta</b> baru saja memesan</span>
+    <span class="sp-badge">✓ Verified</span>
+    <div class="sp-time" id="spTime">2 menit yang lalu</div>
+  </div>
+  <button class="sp-close" onclick="document.getElementById('spNotif').classList.remove('show')">×</button>
+</div>
+
 <script>
+// Social Proof Rotator
+const spOrders = [
+  { name: 'Budi', city: 'Jakarta', time: '2 menit yang lalu' },
+  { name: 'Siti', city: 'Bandung', time: '5 menit yang lalu' },
+  { name: 'Andi', city: 'Surabaya', time: '7 menit yang lalu' },
+  { name: 'Dewi', city: 'Semarang', time: '11 menit yang lalu' },
+  { name: 'Rizki', city: 'Medan', time: '14 menit yang lalu' },
+  { name: 'Nuraini', city: 'Yogyakarta', time: '18 menit yang lalu' },
+  { name: 'Hendra', city: 'Makassar', time: '22 menit yang lalu' },
+  { name: 'Wulan', city: 'Bekasi', time: '25 menit yang lalu' },
+  { name: 'Joko', city: 'Tangerang', time: '29 menit yang lalu' },
+  { name: 'Rina', city: 'Depok', time: '33 menit yang lalu' },
+  { name: 'Agus', city: 'Bogor', time: '38 menit yang lalu' },
+  { name: 'Lina', city: 'Palembang', time: '42 menit yang lalu' }
+];
+const spImages = [
+  'https://cdn.orderonline.id/uploads/images_9421031705307276011.jpg',
+  'https://cdn.orderonline.id/uploads/images_3204311705307533140.png',
+  'https://cdn.orderonline.id/uploads/images_7133571706153732468.png',
+  'https://cdn.orderonline.id/uploads/images_7689031689235551645.gif'
+];
+let spIdx = 0;
+function showSp() {
+  const n = document.getElementById('spNotif');
+  const o = spOrders[spIdx % spOrders.length];
+  document.getElementById('spMsg').innerHTML = '<b>' + o.name + '</b> dari <b>' + o.city + '</b> baru saja memesan';
+  document.getElementById('spTime').textContent = o.time;
+  document.getElementById('spImg').src = spImages[spIdx % spImages.length];
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 5000);
+  spIdx++;
+}
+setTimeout(showSp, 3000);
+setInterval(showSp, 9000);
+
 function updateTotal() {
   const val = document.querySelector('input[name=paket]:checked').value;
   const formatted = 'Rp ' + parseInt(val).toLocaleString('id-ID');
